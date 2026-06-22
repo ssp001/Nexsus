@@ -1,0 +1,148 @@
+{
+    "Comment": "A Hello World example demonstrating various state types of the Amazon States Language",
+    "StartAt": "Lambda Invoke (1)",
+    "States": {
+        "Lambda Invoke (1)": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::lambda:invoke",
+            "OutputPath": "$.Payload",
+            "Parameters": {
+                "Payload.$": "$"
+            },
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "Lambda.ServiceException",
+                        "Lambda.AWSLambdaException",
+                        "Lambda.SdkClientException",
+                        "Lambda.TooManyRequestsException"
+                    ],
+                    "IntervalSeconds": 1,
+                    "MaxAttempts": 3,
+                    "BackoffRate": 2,
+                    "JitterStrategy": "FULL"
+                }
+            ],
+            "Next": "Step Functions StartExecution"
+        },
+        "Step Functions StartExecution": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::states:startExecution.sync:2",
+            "Parameters": {
+                "StateMachineArn": "arn:aws:states:REGION:ACCOUNT_ID:stateMachine:STATE_MACHINE_NAME",
+                "Input": {
+                    "StatePayload": "Hello from Step Functions!",
+                    "AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$": "$$.Execution.Id"
+                }
+            },
+            "Next": "PutObject"
+        },
+        "PutObject": {
+            "Type": "Task",
+            "Parameters": {
+                "Body": {},
+                "Bucket": "MyData",
+                "Key": "MyData"
+            },
+            "Resource": "arn:aws:states:::aws-sdk:s3:putObject.waitForTaskToken",
+            "Next": "Lambda Invoke",
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "BackoffRate": 2,
+                    "IntervalSeconds": 3,
+                    "MaxAttempts": 3,
+                    "MaxDelaySeconds": 1
+                }
+            ]
+        },
+        "Lambda Invoke": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::aws-sdk:lambda:invoke",
+            "OutputPath": "$.Payload",
+            "Parameters": {
+                "FunctionName": "MyData"
+            },
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "Lambda.ServiceException",
+                        "Lambda.AWSLambdaException",
+                        "Lambda.SdkClientException",
+                        "Lambda.TooManyRequestsException"
+                    ],
+                    "IntervalSeconds": 3,
+                    "MaxAttempts": 3,
+                    "BackoffRate": 2,
+                    "JitterStrategy": "FULL",
+                    "MaxDelaySeconds": 3
+                }
+            ],
+            "Next": "SQS SendMessage",
+            "Catch": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "Next": "Lambda Invoke",
+                    "ResultPath": null
+                }
+            ],
+            "TimeoutSeconds": 60
+        },
+        "SQS SendMessage": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::sqs:sendMessage",
+            "Parameters": {
+                "MessageBody.$": "$",
+                "QueueUrl": "${aws_sqs_queue.queue_servcice.url}"
+            },
+            "Next": "DynamoDB PutItem",
+            "Retry": [
+                {
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ],
+                    "BackoffRate": 2,
+                    "IntervalSeconds": 1,
+                    "MaxAttempts": 3
+                }
+            ],
+            "Catch": [
+                {
+                    "Next": "SQS SendMessage",
+                    "ErrorEquals": [
+                        "States.ALL"
+                    ]
+                }
+            ]
+        },
+        "DynamoDB PutItem": {
+            "Type": "Task",
+            "Resource": "arn:aws:states:::dynamodb:putItem",
+            "Parameters": {
+                "TableName": "nexsus_Database",
+                "Item": {
+                    "thread_id": {
+                        "S.$": "$.thread_id"
+                    },
+                    "user_id": {
+                        "S.$": "$.user_id"
+                    },
+                    "json_tree": {
+                        "O.$": "$.json_tree"
+                    },
+                    "Status": {
+                        "S.$": "$.Status"
+                    },
+                    "document_id": {
+                        "s.$": "$.docs_id"
+                    }
+                }
+            },
+            "End": true
+        }
+    }
+}

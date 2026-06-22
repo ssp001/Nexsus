@@ -1,0 +1,10 @@
+boto3
+pageindex
+dotenv
+pyresilience
+boto3-stubs[essential]
+fastapi
+uvicorn
+pydantic_settings 
+python-multipart
+prefect
