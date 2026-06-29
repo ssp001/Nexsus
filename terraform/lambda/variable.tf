@@ -1,35 +1,21 @@
-variable "env" {
-  description = "enviourment"
+variable "name" {
+  description = "fuction name"
 }
-variable "function_name" {
-  description = "lambda fuction name"
+variable "py_version" {
+  description = "python version"
 }
-variable "timeout" {
-  description = "lambda timeout"
-}
-variable "iam_role" {
-  description = "value"
-}
-variable "filename" {
-  description = "filename"
-}
-variable "runtime" {
-  description = "runtime"
-}
-variable "handler" {
-  description = "lambda handeler"
-}
-variable "log_module" {
-  description = "logs dependecie"
+variable "function" {
+  description = "lamda function"
 }
 
-variable "formate" {
-  description = "formate for logs"
+variable "enviourment" {
+  description = "endviourment"
 }
 
-variable "log_level" {
-  description = "formate for info"
+variable "role" {
+  description = "role"
 }
-variable "system_level" {
-  description = "formate for warn"
+
+variable "file_name" {
+  description = "file_name"
 }

@@ -6,10 +6,11 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "boto3>=1.43.31",
-    "boto3-stubs[essential]>=1.43.31",
+    "boto3-stubs[all,essential]>=1.43.36",
     "dotenv>=0.9.9",
     "fastapi>=0.137.1",
     "pageindex>=0.2.8",
+    "polling2>=0.5.0",
     "prefect>=3.7.4",
     "pydantic-settings>=2.14.1",
     "pyresilience>=0.4.0",

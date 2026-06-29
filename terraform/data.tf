@@ -1,11 +1,10 @@
-data "archive_file" "archive_file_embedding_function" {
+data "archive_file" "lambda_embedding" {
   type        = "zip"
-  source_file = "../embedding/main.py"
-  output_path = "../embedding/embedding.zip"
+  source_file = "../lamdas/lamda_embedding.py"
+  output_path = "../zip/lamda_embedding.zip"
 }
-
-data "archive_file" "archive_file_retriver_function" {
+data "archive_file" "lambda_retriver" {
   type        = "zip"
-  source_file = "../retriver/main.py"
-  output_path = "../retriver/retriver.zip"
+  source_file = "../lamdas/retriver.py"
+  output_path = "../zip/retriver.zip"
 }

@@ -1,24 +1,20 @@
-################################
-// aws dynamodb
-################################
-resource "aws_dynamodb_table" "nexsus_db_table" {
-  name           = var.env
-  read_capacity  = var.read_capacity
-  write_capacity = var.write_capacity
-  hash_key       = "User_id"
-  range_key      = "thread_id"
+resource "aws_dynamodb_table" "this" {
+  name           = var.dbname
+  read_capacity  = var.read_cap
+  write_capacity = var.write_cap
+  hash_key       = "user_id"
+  range_key      = "doc_id"
 
   attribute {
-    name = "User_id"
-    type = "S"
-  }
-  attribute {
-    name = "thread_id"
+    name = "user_id"
     type = "S"
   }
 
+  attribute {
+    name = "doc_id"
+    type = "S"
+  }
   tags = {
-    "Enviourment" = var.env
+    "Enviourment" = var.enviourment
   }
-
 }

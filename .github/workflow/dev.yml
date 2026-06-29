@@ -1,0 +1,11 @@
+name: "development Envioutment test workflow pipeline"
+on:
+  push: branche:["dev"]
+  jobs:
+    terraform:
+    name: "terraform_invoke"
+    runs-on: ubuntu-latest
+    Envioutment: "development"
+    steps:
+      - name: "python test"
+        uses: action/checkout@6

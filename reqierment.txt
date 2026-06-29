@@ -2,9 +2,8 @@ boto3
 pageindex
 dotenv
 pyresilience
-boto3-stubs[essential]
-fastapi
+boto3-stubs[all]
 uvicorn
 pydantic_settings 
 python-multipart
-prefect
+polling2

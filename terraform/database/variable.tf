@@ -1,19 +1,20 @@
-variable "name" {
-  type    = string
-  default = "databse name"
-}
-
-variable "env" {
+variable "dbname" {
   type        = string
-  description = "production enviourment"
+  description = "name for data base"
+
+}
+variable "read_cap" {
+  type        = numberc
+  description = "read capacity of the database"
 }
 
-variable "read_capacity" {
+variable "write_cap" {
   type        = number
-  description = "the read capacity of the database"
+  description = "write capacity of the database"
 }
 
-variable "write_capacity" {
-  type        = number
-  description = "dabase write capacity"
+variable "enviourment" {
+  type    = string
+  default = "eviourment value"
 }
+
